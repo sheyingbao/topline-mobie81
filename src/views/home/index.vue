@@ -5,8 +5,12 @@
       fixed
       title="黑马头条"
       />
-      <van-tabs>
-  <van-tab v-for="index in 8" :title="'标签 ' + index" :key="index">
+      <!-- 频道列表 -->
+      <van-tabs animated>
+  <van-tab :sticky="true" :offset-top="46"
+  v-for="channel in channels"
+  :title="channel.name"
+  :key="channel.id">
 <!-- 文章列表  不同的标签页下有不同的列表 -->
    <van-list
      v-model="loading"
@@ -26,17 +30,33 @@
 </template>
 
 <script>
+import { getDefaultOrUserChannels } from '@/api/channel'
 export default {
   name: 'Home',
   data () {
     return {
+    // 列表用的数据
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      channels: []
     }
   },
-
+  created () {
+    // 加载频道列表
+    this.loadChannels()
+  },
   methods: {
+    //   加载频道列表
+    async loadChannels () {
+      try {
+        const data = await getDefaultOrUserChannels()
+        this.channels = data.channels
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // list组件的load
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
@@ -59,8 +79,21 @@ export default {
 <style lang="less" scoped>
 // 在scope中书写的样式，动态生成的标签或则子组件中不可用
 // 深度作用选择器  /deep/
-.van-tabs /deep/ .van-tabs__content{
-margin-top:46px;
-margin-bottom: 50px;
+// .van-tabs /deep/ .van-tabs__content{
+// margin-top:46px;
+// margin-bottom: 50px;
+// }
+.van-tabs {
+  /deep/ .van-tabs__wrap {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 10px;
+    z-index: 100;
+  }
+  /deep/ .van-tabs__content {
+    margin-top: 90px;
+    margin-bottom: 50px;
+  }
 }
 </style>
