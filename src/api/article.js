@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-undef */
 import request from '@/utils/request'
 
 /**
@@ -6,17 +8,18 @@ import request from '@/utils/request'
  */
 export const getArticles = ({
   // 频道的id
-  channelId,
-  // 事件戳
+  channel_id,
+  // 时间戳
   timestamp,
   //   是否包含置顶1， 0不包含
-  withtop
+  // eslint-disable-next-line camelcase
+  with_top
 }) => {
   return request.get('/app/v1_1/articles', {
     params: {
-      channelId,
+      channel_id,
       timestamp,
-      withtop
+      with_top
     }
   })
 }
